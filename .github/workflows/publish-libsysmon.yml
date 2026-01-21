@@ -1,0 +1,46 @@
+name: publish-libsysmon
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSYSMON_BUILD_CLI=OFF
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Package
+        run: |
+          rm -rf dist
+          mkdir -p dist/sysmon/include
+          cp build/libsysmon.a dist/sysmon/
+          cp -R include/sysmon dist/sysmon/include/
+          printf "%s\n" "${GITHUB_SHA}" > dist/sysmon/VERSION
+          (cd dist && tar -czf libsysmon-macos.tar.gz sysmon)
+
+      - name: Update latest tag
+        run: |
+          git tag -f latest
+          git push -f origin latest
+
+      - name: Publish release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: latest
+          allowUpdates: true
+          replacesArtifacts: true
+          artifacts: dist/libsysmon-macos.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}

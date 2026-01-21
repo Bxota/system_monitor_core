@@ -1,0 +1,38 @@
+# Build artifacts
+/build/
+/cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+CTestTestfile.cmake
+compile_commands.json
+*.ninja
+.ninja_*
+
+# Binaries and objects
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.obj
+*.lib
+*.pdb
+*.dSYM/
+
+# Logs
+*.log
+
+# Local configuration
+sysmon.ini
+
+# Editor/OS
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/

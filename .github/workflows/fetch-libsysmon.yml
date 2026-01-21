@@ -1,0 +1,30 @@
+name: fetch-libsysmon
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  fetch:
+    runs-on: macos-latest
+    env:
+      CORE_REPO: ${{ github.repository_owner }}/system_monitor_core
+      ASSET_NAME: libsysmon-macos.tar.gz
+      OUT_DIR: vendor/sysmon
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download latest core release
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: ${{ env.CORE_REPO }}
+          tag: latest
+          fileName: ${{ env.ASSET_NAME }}
+          out-file-path: ${{ env.OUT_DIR }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract
+        run: |
+          mkdir -p "${OUT_DIR}"
+          tar -xzf "${OUT_DIR}/${ASSET_NAME}" -C "${OUT_DIR}"

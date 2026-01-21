@@ -1,0 +1,26 @@
+name: build-libsysmon
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSYSMON_BUILD_CLI=OFF
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Verify archive
+        run: test -f build/libsysmon.a
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libsysmon.a
+          path: build/libsysmon.a
