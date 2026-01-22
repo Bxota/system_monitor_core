@@ -19,6 +19,7 @@ add_library(sysmon
   src/modules/ram.c
   src/modules/battery.c
   src/modules/network.c
+  src/modules/storage.c
 )
 
 target_include_directories(sysmon
